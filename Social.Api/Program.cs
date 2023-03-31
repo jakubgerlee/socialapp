@@ -1,52 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Social.Api.Options;
+using Social.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
-
-builder.Services.AddApiVersioning(config =>
-{
-    config.DefaultApiVersion = new ApiVersion(1,0);
-    config.AssumeDefaultVersionWhenUnspecified = true; //if you don't specify version, use defualt
-    config.ReportApiVersions = true; //if you have a couple of versions will send back supported headers in response
-    config.ApiVersionReader = new UrlSegmentApiVersionReader();
-});
-
-builder.Services.AddVersionedApiExplorer(config =>
-{
-    config.GroupNameFormat = "'v'VVV";
-    config.SubstituteApiVersionInUrl = true;
-});
-
-builder.Services.AddSwaggerGen();
-
-builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
-
-builder.Services.AddEndpointsApiExplorer();
+builder.RegisterServices();
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-	app.UseSwaggerUI(options =>
-	{
-        var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-
-        foreach(var description in provider.ApiVersionDescriptions)
-		{
-            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", 
-                description.ApiVersion.ToString());
-		}
-	});
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
+app.RegisterApp();
 app.Run();
