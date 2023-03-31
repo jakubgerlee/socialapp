@@ -1,6 +1,7 @@
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Social.Api.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,14 +15,32 @@ builder.Services.AddApiVersioning(config =>
     config.ApiVersionReader = new UrlSegmentApiVersionReader();
 });
 
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddVersionedApiExplorer(config =>
+{
+    config.GroupNameFormat = "'v'VVV";
+    config.SubstituteApiVersionInUrl = true;
+});
+
 builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwaggerUI(options =>
+	{
+        var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+        foreach(var description in provider.ApiVersionDescriptions)
+		{
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", 
+                description.ApiVersion.ToString());
+		}
+	});
 }
 
 app.UseHttpsRedirection();
