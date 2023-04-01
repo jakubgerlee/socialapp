@@ -2,7 +2,7 @@
 
 namespace Social.Api.Registers;
 
-public class SwaggerWebAppRegister : IWebApplicationRegister
+public class SwaggerWebAppRegister : IWebApplicationRegistrar
 {
 	public void RegisterPipelineComponents(WebApplication app)
 	{

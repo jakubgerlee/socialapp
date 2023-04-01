@@ -1,8 +1,11 @@
 using Social.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.RegisterServices();
+builder.RegisterServices(typeof(Program));
 
 var app = builder.Build();
-app.RegisterApp();
+
+app.RegisterPipelineComponents(typeof(Program));
+
 app.Run();
+

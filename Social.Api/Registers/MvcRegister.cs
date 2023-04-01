@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace Social.Api.Registers;
 
-public class MvcRegister : IWebApplicationBuilderRegister
+public class MvcRegister : IWebApplicationBuilderRegistrar
 {
 	public void RegisterServices(WebApplicationBuilder builder)
 	{

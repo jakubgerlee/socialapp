@@ -2,7 +2,7 @@
 
 namespace Social.Api.Registers;
 
-public class SwaggerRegister : IWebApplicationBuilderRegister
+public class SwaggerRegister : IWebApplicationBuilderRegistrar
 {
 	public void RegisterServices(WebApplicationBuilder builder)
 	{

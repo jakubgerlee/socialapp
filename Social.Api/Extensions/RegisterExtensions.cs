@@ -1,14 +1,34 @@
-﻿namespace Social.Api.Extensions;
+﻿using Social.Api.Registers;
+
+namespace Social.Api.Extensions;
 
 public static class RegisterExtensions
 {
-	public static void RegisterServices(this WebApplicationBuilder builder)
+	public static void RegisterServices(this WebApplicationBuilder builder, Type scanningType)
 	{
-		//TODO: using reflection register 
+		var registrars = GetRegistrars<IWebApplicationBuilderRegistrar>(scanningType);
+
+		foreach(var registrar in registrars)
+		{
+			registrar.RegisterServices(builder);
+		}
 	}
 
-	public static void RegisterApp(this WebApplication app)
+	public static void RegisterPipelineComponents(this WebApplication app, Type scanningType)
 	{
-		//TODO: using reflection register 
+		var registrars = GetRegistrars<IWebApplicationRegistrar>(scanningType);
+
+		foreach (var registrar in registrars)
+		{
+			registrar.RegisterPipelineComponents(app);
+		}
+	}
+
+	private static IEnumerable<T> GetRegistrars<T>(Type scanningType) where T : IRegistrar
+	{
+		return scanningType.Assembly.GetTypes()
+			.Where(t => t.IsAssignableTo(typeof(T)) && !t.IsAbstract && !t.IsInterface)
+			.Select(Activator.CreateInstance)
+			.Cast<T>();
 	}
 }
