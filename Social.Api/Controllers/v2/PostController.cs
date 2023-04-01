@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Social.Domain.Models;
 
 namespace Social.Api.Controllers.v2;
 
