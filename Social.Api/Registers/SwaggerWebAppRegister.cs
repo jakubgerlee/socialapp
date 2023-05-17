@@ -11,7 +11,7 @@ public class SwaggerWebAppRegister : IWebApplicationRegistrar
 		{
 			var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-			foreach (var description in provider.ApiVersionDescriptions)
+			foreach (var description in provider.ApiVersionDescriptions.Reverse())
 			{
 				options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
 					description.ApiVersion.ToString());

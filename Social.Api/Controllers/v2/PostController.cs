@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Social.Api.Models;
 
 namespace Social.Api.Controllers.v2;
 
@@ -12,5 +14,12 @@ public class PostController : Controller
 	public IActionResult GetById(int id)
 	{
 		return Ok();
+	}
+	
+	[HttpPost]
+	[Route("/Person")]
+	public IActionResult AddPerson([FromBody] Person person)
+	{
+		return Ok(person);
 	}
 }
